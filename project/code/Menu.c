@@ -21,6 +21,8 @@ void Peripheral_Init(void)
     key_init(10);
 
     Motor_init();
+
+    Param_Init();
 }
 
 
@@ -109,6 +111,7 @@ void Menu_Show(void)
         else if (menu_flag_temp == 3)
         {
             ips200_clear();
+            Param_Page_Menu();
             
             // 从Param界面返回，显示主菜单界面
             ips200_clear();

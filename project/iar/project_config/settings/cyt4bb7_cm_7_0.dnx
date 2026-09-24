@@ -12,17 +12,17 @@
         <ByteLimit>50</ByteLimit>
     </Stack>
     <PlDriver>
-        <FirstRun>0</FirstRun>
         <MemConfigValue>D:\Program Files\IAR Systems\Embedded Workbench 9.2\arm\config\debugger\Infineon\CYT4BB_M7.ddf</MemConfigValue>
+        <FirstRun>0</FirstRun>
     </PlDriver>
     <Jet>
-        <JetConnSerialNo>ZF-WLFS-CMSIS-DAP:80981860-B8F862DAF0E4</JetConnSerialNo>
-        <JetConnFoundProbes />
-        <PrevWtdReset>Reset and halt after bootloader</PrevWtdReset>
         <DisableInterrupts>0</DisableInterrupts>
         <LeaveRunning>0</LeaveRunning>
         <MultiCoreRunAll>0</MultiCoreRunAll>
         <OnlineReset>Software</OnlineReset>
+        <JetConnSerialNo>ZF-WLFS-CMSIS-DAP:80981860-B8F862DAF0E4</JetConnSerialNo>
+        <JetConnFoundProbes />
+        <PrevWtdReset>Reset and halt after bootloader</PrevWtdReset>
     </Jet>
     <ArmDriver>
         <EnableCache>1</EnableCache>
@@ -42,7 +42,7 @@
         <PowerConnectPC>1</PowerConnectPC>
     </SWOManager>
     <DebugChecksum>
-        <Checksum>2847438006</Checksum>
+        <Checksum>1790879579</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -90,12 +90,12 @@
     <Breakpoints2>
         <Count>0</Count>
     </Breakpoints2>
-    <TermIOLog>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ ""</LogFile>
-    </TermIOLog>
     <Aliases>
         <Count>0</Count>
         <SuppressDialog>0</SuppressDialog>
     </Aliases>
+    <TermIOLog>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+    </TermIOLog>
 </settings>

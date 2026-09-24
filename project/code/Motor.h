@@ -82,23 +82,33 @@ void    Motor_ALL_Zero              (void);
 #define ENC_4_P_CH2				    TC_CH27_ENCODER_CH2_P19_3
 
 // 编码器(正交)调用二次宏定义
-#define ENC1_GET()                  (-encoder_get_count(ENCODER_1))
-#define ENC1_CLEAR()                encoder_clear_count(ENCODER_1)
+#define ENC_FL_GET()                (-encoder_get_count(ENCODER_1))
+#define ENC_FL_CLEAR()              encoder_clear_count(ENCODER_1)
 
-#define ENC2_GET()                  (encoder_get_count(ENCODER_2))
-#define ENC2_CLEAR()                encoder_clear_count(ENCODER_2)
+#define ENC_FR_GET()                ( encoder_get_count(ENCODER_2))
+#define ENC_FR_CLEAR()              encoder_clear_count(ENCODER_2)
 
-#define ENC3_GET()                  (-encoder_get_count(ENCODER_3))
-#define ENC3_CLEAR()                encoder_clear_count(ENCODER_3)
+#define ENC_RL_GET()                (-encoder_get_count(ENCODER_3))
+#define ENC_RL_CLEAR()              encoder_clear_count(ENCODER_3)
 
-#define ENC4_GET()                  (encoder_get_count(ENCODER_4))
-#define ENC4_CLEAR()                encoder_clear_count(ENCODER_4)
+#define ENC_RR_GET()                ( encoder_get_count(ENCODER_4))
+#define ENC_RR_CLEAR()              encoder_clear_count(ENCODER_4)
 
-// 编码器计数值全局变量 （不存储累加值）
-extern int ENC_FL_CNT;
-extern int ENC_FR_CNT;
-extern int ENC_RL_CNT;
-extern int ENC_RR_CNT;
+// 编码器计数值全局变量 （单周期增量，不存储累加值）
+extern int16 ENC_FL_CNT;
+extern int16 ENC_FR_CNT;
+extern int16 ENC_RL_CNT;
+extern int16 ENC_RR_CNT;
+
+// 编码器累加值全局变量 （累计值）
+// 更多在于调试性质的观测
+extern int32 ENC_FL_SUM;
+extern int32 ENC_FR_SUM;
+extern int32 ENC_RL_SUM;
+extern int32 ENC_RR_SUM;
+
+// 编码器相关数据重置
+void ENC_All_Clear(void);
 /**********************************************************/
 /*------------------------------------------[E] 编码器 [E]*/
 /**********************************************************/

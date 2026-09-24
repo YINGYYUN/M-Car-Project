@@ -1134,6 +1134,30 @@
             <name>$PROJ_DIR$\..\..\code\Motor.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\code\PID.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\PID.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\common_menu.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\common_menu.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\Param_Page.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\Param_Page.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\Param_Storage.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\Param_Storage.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\code\本文件夹作用.txt</name>
         </file>
     </group>

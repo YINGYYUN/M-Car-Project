@@ -111,11 +111,26 @@ void Motor_ALL_Zero(void)
 /*[S] 编码器 [S]------------------------------------------*/
 /**********************************************************/
 
-// 编码器计数值全局变量 （不存储累加值）
-int ENC_FL_CNT = 0;
-int ENC_FR_CNT = 0;
-int ENC_RL_CNT = 0;
-int ENC_RR_CNT = 0;
+// 编码器计数值全局变量 （单周期增量，不存储累加值）
+int16 ENC_FL_CNT = 0;
+int16 ENC_FR_CNT = 0;
+int16 ENC_RL_CNT = 0;
+int16 ENC_RR_CNT = 0;
+
+// 编码器累加值全局变量 （累计值）
+// 更多在于调试性质的观测
+int32 ENC_FL_SUM = 0;
+int32 ENC_FR_SUM = 0;
+int32 ENC_RL_SUM = 0;
+int32 ENC_RR_SUM = 0;
+
+// 编码器相关数据重置
+void ENC_All_Clear(void)
+{
+    ENC_FL_CNT = 0; ENC_FR_CNT = 0; ENC_RL_CNT = 0; ENC_RR_CNT = 0;
+    ENC_FL_SUM = 0; ENC_FR_SUM = 0; ENC_RL_SUM = 0; ENC_RR_SUM = 0;
+    ENC_FL_CLEAR(); ENC_FR_CLEAR(); ENC_RL_CLEAR(); ENC_RR_CLEAR();
+}
 /**********************************************************/
 /*------------------------------------------[E] 编码器 [E]*/
 /**********************************************************/

@@ -229,4 +229,7 @@ D:\Project\Code\CYT4BB7\M-Car-Project\project\iar\Debug_m7_0\BrowseInfo\user_851
   D:\Project\Code\CYT4BB7\M-Car-Project\project\iar\project_config\..\..\..\libraries\zf_components\seekfree_assistant_interface.h \
   D:\Project\Code\CYT4BB7\M-Car-Project\project\iar\project_config\..\..\code\Menu.h \
   D:\Project\Code\CYT4BB7\M-Car-Project\project\iar\project_config\..\..\code\Motor.h \
-  D:\Project\Code\CYT4BB7\M-Car-Project\project\iar\project_config\..\..\code\Debug.h
+  D:\Project\Code\CYT4BB7\M-Car-Project\project\iar\project_config\..\..\code\Debug.h \
+  D:\Project\Code\CYT4BB7\M-Car-Project\project\iar\project_config\..\..\code\PID.h \
+  D:\Project\Code\CYT4BB7\M-Car-Project\project\iar\project_config\..\..\code\Param_Storage.h \
+  D:\Project\Code\CYT4BB7\M-Car-Project\project\iar\project_config\..\..\code\Param_Page.h

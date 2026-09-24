@@ -114,6 +114,9 @@
 #include "Menu.h"
 #include "Motor.h"
 #include "Debug.h"
+#include "PID.h"
+#include "Param_Storage.h"
+#include "Param_Page.h"
 extern uint16 Time_Count1;
 extern uint16 Time_Count2;
 //=====================================================自建代码层=====================================================

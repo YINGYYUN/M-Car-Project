@@ -1447,6 +1447,12 @@
             <name>$PROJ_DIR$\..\..\code\Motor.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\code\PID.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\PID.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\code\本文件夹作用.txt</name>
         </file>
     </group>
