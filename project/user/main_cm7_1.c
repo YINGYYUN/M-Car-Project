@@ -34,13 +34,7 @@
 ********************************************************************************************************************/
 
 #include "zf_common_headfile.h"
-// 打开新的工程或者工程移动了位置务必执行以下操作
-// 第一步 关闭上面所有打开的文件
-// 第二步 project->clean  等待下方进度条走完
-
-// 本例程是开源库空工程 可用作移植或者测试各类内外设
-// 本例程是开源库空工程 可用作移植或者测试各类内外设
-// 本例程是开源库空工程 可用作移植或者测试各类内外设
+#include "IMU_Analysis.h"
 
 // **************************** 代码区域 ****************************
 
@@ -48,21 +42,39 @@ int main(void)
 {
     clock_init(SYSTEM_CLOCK_250M); 	// 时钟配置及系统初始化<务必保留>
     debug_info_init();                  // 调试串口信息初始化
-     
-    // 此处编写用户代码 例如外设初始化代码等
 
+    // 外设初始化
+    uint8 imu_ret = imu963ra_init();    // IMU963RA 初始化（硬件 SPI2, P15.x）
+    printf("[CM7_1] imu963ra_init ret=%d\n", imu_ret);
+    pit_ms_init(PIT_CH2, 10);           // 10ms 定时，中断进 cm7_1_isr.c 的 pit0_ch2_isr
 
-    
-
-    // 此处编写用户代码 例如外设初始化代码等
     while(true)
     {
-        // 此处编写需要循环执行的代码
-        
+        // 陀螺仪零漂校准状态机（RUNNING 时内部消费 IMU_D_and_A_Enable 采集零偏）
+        IMU_Gyro_Calib_Check(&gyro_cal);
 
-      
-      
-        // 此处编写需要循环执行的代码
+        // 处理 CM7_0 通过共享内存发来的命令（先失效 cache 读最新值）
+        SHARED_IMU_READ_SYNC();
+        if(SHARED_IMU_ADDR->cmd_calib)
+        {
+            SHARED_IMU_ADDR->cmd_calib = 0;
+            IMU_Gyro_Calib_Start(&gyro_cal);    // 零漂校准（车需静止）
+        }
+        if(SHARED_IMU_ADDR->cmd_reset)
+        {
+            SHARED_IMU_ADDR->cmd_reset = 0;
+            IMU_Reset_Data();                   // Yaw 归零
+        }
+
+        // 正常解算 + 写 yaw 到共享内存
+        if(IMU_D_and_A_Enable)
+        {
+            IMU_D_and_A_Enable = 0;
+            IMU_Update_Data();                  // 读原始数据
+            IMU_Update_Analysis();              // 解算 Yaw_Result
+            SHARED_IMU_ADDR->yaw = (int16)(Yaw_Result * 100.0f);  // 定点：0.01°/LSB
+            SHARED_IMU_WRITE_SYNC();            // 写回 cache，让 CM7_0 可见
+        }
     }
 }
 

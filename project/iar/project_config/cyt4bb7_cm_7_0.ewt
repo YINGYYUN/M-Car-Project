@@ -1429,10 +1429,22 @@
     <group>
         <name>code</name>
         <file>
+            <name>$PROJ_DIR$\..\..\code\common_menu.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\common_menu.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\code\Debug.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\code\Debug.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\IMU_Analysis.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\IMU_Analysis.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\code\Menu.c</name>
@@ -1441,10 +1453,28 @@
             <name>$PROJ_DIR$\..\..\code\Menu.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\code\Motion_Analysis.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\Motion_Analysis.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\code\Motor.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\code\Motor.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\Param_Page.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\Param_Page.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\Param_Storage.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\Param_Storage.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\code\PID.c</name>

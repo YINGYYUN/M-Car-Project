@@ -1116,6 +1116,12 @@
     <group>
         <name>code</name>
         <file>
+            <name>$PROJ_DIR$\..\..\code\common_menu.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\common_menu.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\code\Debug.c</name>
         </file>
         <file>
@@ -1128,22 +1134,16 @@
             <name>$PROJ_DIR$\..\..\code\Menu.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\code\Motion_Analysis.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\Motion_Analysis.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\code\Motor.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\code\Motor.h</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\code\PID.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\code\PID.h</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\code\common_menu.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\code\common_menu.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\code\Param_Page.c</name>
@@ -1156,6 +1156,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\code\Param_Storage.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\PID.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\PID.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\code\本文件夹作用.txt</name>

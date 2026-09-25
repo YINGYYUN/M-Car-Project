@@ -1118,6 +1118,12 @@
         <file>
             <name>$PROJ_DIR$\..\..\code\本文件夹作用.txt</name>
         </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\IMU_Analysis.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\IMU_Analysis.h</name>
+        </file>
     </group>
     <group>
         <name>doc</name>
