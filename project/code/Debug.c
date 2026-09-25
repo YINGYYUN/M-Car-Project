@@ -186,6 +186,8 @@ int Debug_Motor (void)
     Time_Count1 = 0;
     Time_Count2 = 0;
 
+    ENC_All_Clear();
+
     while(1)
     {
         // 存储确认键被按下时Debug_M_f的值的临时变量，默认为无效值0
@@ -268,10 +270,10 @@ int Debug_Motor (void)
                     ips200_printf(66 ,128, "%d   ", ENC_FR_CNT);
                     ips200_printf(66 ,144, "%d   ", ENC_RL_CNT);
                     ips200_printf(66 ,160, "%d   ", ENC_RR_CNT);
-                    ips200_printf(154,112, "%d     ", ENC_FL_SUM);
-                    ips200_printf(154,128, "%d     ", ENC_FR_SUM);
-                    ips200_printf(154,144, "%d     ", ENC_RL_SUM);
-                    ips200_printf(154,160, "%d     ", ENC_RR_SUM);
+                    // ips200_printf(154,112, "%d     ", ENC_FL_SUM);
+                    // ips200_printf(154,128, "%d     ", ENC_FR_SUM);
+                    // ips200_printf(154,144, "%d     ", ENC_RL_SUM);
+                    // ips200_printf(154,160, "%d     ", ENC_RR_SUM);
                 }
             }
         }
@@ -286,10 +288,10 @@ int Debug_Motor (void)
             ips200_printf(66 ,128, "%d   ", ENC_FR_CNT);
             ips200_printf(66 ,144, "%d   ", ENC_RL_CNT);
             ips200_printf(66 ,160, "%d   ", ENC_RR_CNT);
-            ips200_printf(154,112, "%d     ", ENC_FL_SUM);
-            ips200_printf(154,128, "%d     ", ENC_FR_SUM);
-            ips200_printf(154,144, "%d     ", ENC_RL_SUM);
-            ips200_printf(154,160, "%d     ", ENC_RR_SUM);
+            // ips200_printf(154,112, "%d     ", ENC_FL_SUM);
+            // ips200_printf(154,128, "%d     ", ENC_FR_SUM);
+            // ips200_printf(154,144, "%d     ", ENC_RL_SUM);
+            // ips200_printf(154,160, "%d     ", ENC_RR_SUM);
         }
 
 
@@ -339,6 +341,8 @@ int Debug_Motor_PID (void)
     // 电机调试界面光标 标志位
     // 正常的命名为Debug_Motor_PID_flag，此处进行简化
     uint8_t Debug_M_P_f = 1;
+
+    ENC_All_Clear();
 
     while(1)
     {
@@ -425,7 +429,7 @@ int Debug_Motor_PID (void)
 
 
                 /* 数据显示 */
-                if (Time_Count1 >= 8)// 10ms * 8 周期
+                if (Time_Count1 >= 5)// 10ms * 5 周期
                 {
                     Time_Count1 = 0;
 
@@ -441,14 +445,22 @@ int Debug_Motor_PID (void)
                     // ips200_printf(154,128, "%d     ", ENC_FR_SUM);
                     // ips200_printf(154,144, "%d     ", ENC_RL_SUM);
                     // ips200_printf(154,160, "%d     ", ENC_RR_SUM);
-					// printf("%d,%d,%d\n", (int16_t)Motor_1_PID.Actual, (int16_t)Motor_1_PID.Target, (int16_t)Motor_1_PID.Out);
                 }
+
+                if (Time_Count2 >= 1)// 10ms * 1 周期
+                {
+                    Time_Count2 = 0;
+
+					printf("%d,%d,%d\n", (int16_t)Motor_FL_PID.Actual, (int16_t)Motor_FL_PID.Target, (int16_t)Motor_FL_PID.Out);
+                }
+
+
             }
         }
         
 
         /* 数据显示 */
-        if (Time_Count1 >= 8)// 10 * 8 ms周期
+        if (Time_Count1 >= 5)// 10ms * 5 周期
         {
             Time_Count1 = 0;
 
@@ -464,7 +476,13 @@ int Debug_Motor_PID (void)
             // ips200_printf(154,128, "%d     ", ENC_FR_SUM);
             // ips200_printf(154,144, "%d     ", ENC_RL_SUM);
             // ips200_printf(154,160, "%d     ", ENC_RR_SUM);
-			// printf("%d,%d,%d\n", (int16_t)Motor_1_PID.Actual, (int16_t)Motor_1_PID.Target, (int16_t)Motor_1_PID.Out);
+        }
+
+        if (Time_Count2 >= 1)// 10ms * 1 周期
+        {
+            Time_Count2 = 0;
+
+            printf("%d,%d,%d\n", (int16_t)Motor_FL_PID.Actual, (int16_t)Motor_FL_PID.Target, (int16_t)Motor_FL_PID.Out);
         }
         
         

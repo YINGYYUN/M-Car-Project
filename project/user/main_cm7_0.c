@@ -52,7 +52,7 @@ int main(void)
     
     Peripheral_Init();				    // 初始化外设，自行配置
     pit_ms_init(PIT_CH0, 10);
-    pit_ms_init(PIT_CH1, 5);
+    pit_ms_init(PIT_CH1, 10);
     
     // 此处编写用户代码 例如外设初始化代码等
     while(true)

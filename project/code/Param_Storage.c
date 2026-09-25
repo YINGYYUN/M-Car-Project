@@ -14,13 +14,13 @@ extern PID_INC_t Motor_RR_PID;           // 右后电机
 // 默认参数值(首次使用或恢复出厂设置时使用)
 static const float DEFAULT_PARAMS[PARAM_COUNT] = {
     // Motor_FL_PID
-    7.0f, 0.9f, 0.0f,       // KP, KI, KD
+    4.0f, 0.6f, 1.0f,       // KP, KI, KD
     // Motor_FR_PID
-    7.0f, 0.9f, 0.0f,       // KP, KI, KD
+    4.0f, 0.6f, 1.0f,       // KP, KI, KD
     // Motor_RL_PID
-    7.0f, 0.9f, 0.0f,       // KP, KI, KD
+    4.0f, 0.6f, 1.0f,       // KP, KI, KD
     // Motor_RR_PID
-    7.0f, 0.9f, 0.0f,       // KP, KI, KD
+    4.0f, 0.6f, 1.0f,       // KP, KI, KD
 };
 
 // 参数缓存区(菜单直接修改此数组, Flash 读写也通过此数组)
@@ -61,6 +61,7 @@ static uint8_t param_cache_is_valid(void)
             return 0;
 
         // 任意一个 Kp 非零即认为有效
+        // 只是采样检验有效性，后续参数不必要参与该判定
         if (i == MOTOR_FL_KP_IDX || i == MOTOR_FR_KP_IDX ||
             i == MOTOR_RL_KP_IDX || i == MOTOR_RR_KP_IDX)
         {
