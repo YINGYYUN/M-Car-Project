@@ -35,8 +35,8 @@
 
 #include "zf_common_headfile.h"
 #include "IMU_Analysis.h"
+#include "PAW3395_Analysis.h"
 
-// **************************** 代码区域 ****************************
 
 int main(void)
 {
@@ -46,7 +46,11 @@ int main(void)
     // 外设初始化
     uint8 imu_ret = imu963ra_init();    // IMU963RA 初始化（硬件 SPI2, P15.x）
     printf("[CM7_1] imu963ra_init ret=%d\n", imu_ret);
+    uint8 flow_ret = paw3395_init();    // PAW3395 初始化（软件 SPI）
+    printf("[CM7_1] paw3395_init ret=%d\n", flow_ret);
     pit_ms_init(PIT_CH2, 10);           // 10ms 定时，中断进 cm7_1_isr.c 的 pit0_ch2_isr
+
+    uint8 flow_cnt = 0;                 // 光流读取分频计数（每 2 次 10ms = 20ms 读一次）
 
     while(true)
     {
@@ -57,13 +61,21 @@ int main(void)
         SHARED_IMU_READ_SYNC();
         if(SHARED_IMU_ADDR->cmd_calib)
         {
-            SHARED_IMU_ADDR->cmd_calib = 0;
             IMU_Gyro_Calib_Start(&gyro_cal);    // 零漂校准（车需静止）
+            SHARED_IMU_ADDR->cmd_calib = 0;
         }
         if(SHARED_IMU_ADDR->cmd_reset)
         {
-            SHARED_IMU_ADDR->cmd_reset = 0;
             IMU_Reset_Data();                   // Yaw 归零
+            SHARED_IMU_ADDR->cmd_reset = 0;
+        }
+
+        // 处理 CM7_0 发来的光流清零命令
+        SHARED_FLOW_READ_SYNC();
+        if(SHARED_FLOW_ADDR->cmd_clear)
+        {
+            SHARED_FLOW_ADDR->cmd_clear = 0;
+            paw3395_clear_count();              // 清零累计位移
         }
 
         // 正常解算 + 写 yaw 到共享内存
@@ -73,9 +85,16 @@ int main(void)
             IMU_Update_Data();                  // 读原始数据
             IMU_Update_Analysis();              // 解算 Yaw_Result
             SHARED_IMU_ADDR->yaw = (int16)(Yaw_Result * 100.0f);  // 定点：0.01°/LSB
+
+            // 每 20ms 读一次光流位移（软 SPI 较慢，降低频率）
+            if(++flow_cnt >= 2)
+            {
+                flow_cnt = 0;
+                PAW_Analysis_Update();
+            }
+
             SHARED_IMU_WRITE_SYNC();            // 写回 cache，让 CM7_0 可见
         }
     }
 }
 
-// **************************** 代码区域 ****************************

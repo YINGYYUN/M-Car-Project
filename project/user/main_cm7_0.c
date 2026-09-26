@@ -38,12 +38,13 @@
 
 // 从 CM7_1 共享内存读到的 yaw（定点，0.01°/LSB），核心 0 公用读写变量
 volatile int16 Yaw_Receive = 0;
+// WiFi 是否已初始化（未初始化时，依赖 WiFi 的功能不启用）
+volatile uint8 wifi_spi_inited = 0;
 
-// **************************** 代码区域 ****************************
 
 int main(void)
 {
-    clock_init(SYSTEM_CLOCK_250M); 	// 时钟配置及系统初始化<务必保留>
+    clock_init(SYSTEM_CLOCK_250M); 	    // 时钟配置及系统初始化<务必保留>
     debug_init();                       // 调试串口信息初始化
 
     Peripheral_Init();				    // 初始化外设，自行配置
@@ -55,5 +56,3 @@ int main(void)
         Menu_Show();
     }
 }
-
-// **************************** 代码区域 ****************************

@@ -46,7 +46,6 @@ uint16 Time_Count2 = 0;
 // 从 CM7_1 共享内存读到的 yaw（定义在 main_cm7_0.c）
 extern volatile int16 Yaw_Receive;
 
-
 // **************************** PIT中断函数 ****************************
 void pit0_ch0_isr()                     // 定时器通道 0 周期中断服务函数      
 {
@@ -54,10 +53,11 @@ void pit0_ch0_isr()                     // 定时器通道 0 周期中断服务�
   
     // 10ms
     key_scanner();
-    // 从共享内存读 CM7_1 解算的 yaw（持续更新，供其他模块使用）
+    // 从共享内存读取来自cm7_1的数据
     SHARED_IMU_READ_SYNC();
     Yaw_Receive = SHARED_IMU_ADDR->yaw;
-    // 自增,3000清零
+    
+    // 参考计时值，自增,3000清零
     Time_Count1 = (Time_Count1 >= 3000) ? 0 : Time_Count1 + 1;
     Time_Count2 = (Time_Count2 >= 3000) ? 0 : Time_Count2 + 1;
     

@@ -6,6 +6,7 @@
 #ifndef __MOTION_ANALYSIS_H
 #define __MOTION_ANALYSIS_H
 
+
 // a:0.09m  ;b:0.10m 
 // A_B_SUM = (a + b)，即底盘几何中心到轮子轴心的纵向距离(a)与横向距离(b)之和
 // 单位：米 (m)，用于将底盘自转角速度(rad/s)转换为轮子的切向线速度(m/s)

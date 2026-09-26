@@ -96,7 +96,7 @@ void Menu_Show(void)
             // 从Process界面返回，显示主菜单界面
             ips200_clear();
             Menu_UI();
-            ips200_show_string(0  ,32 , ">");
+            key_pressed = 1;
         }
         else if (menu_flag_temp == 2)
         {
@@ -106,7 +106,7 @@ void Menu_Show(void)
             // 从Debug界面返回，显示主菜单界面
             ips200_clear();
             Menu_UI();
-            ips200_show_string(0  ,48 , ">");
+            key_pressed = 1;
         }
         else if (menu_flag_temp == 3)
         {
@@ -116,7 +116,7 @@ void Menu_Show(void)
             // 从Param界面返回，显示主菜单界面
             ips200_clear();
             Menu_UI();
-            ips200_show_string(0  ,64 , ">");
+            key_pressed = 1;
         }
 
 

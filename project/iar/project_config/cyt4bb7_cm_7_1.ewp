@@ -1116,13 +1116,25 @@
     <group>
         <name>code</name>
         <file>
-            <name>$PROJ_DIR$\..\..\code\本文件夹作用.txt</name>
+            <name>$PROJ_DIR$\..\..\code\driver_paw3395.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\driver_paw3395.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\code\IMU_Analysis.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\code\IMU_Analysis.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\PAW3395_Analysis.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\PAW3395_Analysis.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\code\本文件夹作用.txt</name>
         </file>
     </group>
     <group>

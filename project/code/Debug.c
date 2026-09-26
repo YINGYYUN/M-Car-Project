@@ -5,12 +5,11 @@
 
 #include "zf_common_headfile.h"
 #include "IMU_Analysis.h"
+#include "PAW3395_Analysis.h"
 
 // 从 CM7_1 收到的 yaw（定点，0.01°/LSB），定义在 main_cm7_0.c
 extern volatile int16 Yaw_Receive;
-
-// WiFi 是否已初始化（未初始化时，依赖 WiFi 的功能不启用）
-uint8 g_wifi_inited = 0;
+extern volatile uint8 wifi_spi_inited;
 
 /**********************************************************/
 /*[S] 界面样式 [S]----------------------------------------*/
@@ -21,10 +20,11 @@ void Debug_Page_Menu_UI(void)
 {
     ips200_show_string(8  ,0  , "[Debug]");
     ips200_show_string(0  ,16 , "==============================");
-    ips200_show_string(10 ,32 , "MOTOR");
-    ips200_show_string(10 ,48 , "MOTOR-PID");
-    ips200_show_string(10 ,64 , "IMU");
-    ips200_show_string(10 ,80 , "WIFI");
+    ips200_printf(10 ,32 , "WIFI-SPI  %d", wifi_spi_inited);
+    ips200_show_string(10 ,48 , "MOTOR");
+    ips200_show_string(10 ,64 , "MOTOR-PID");
+    ips200_show_string(10 ,80 , "IMU");
+    ips200_show_string(10 ,96 , "PAW3395");
 }
 
 // [三级界面]电机调试界面
@@ -73,6 +73,19 @@ void Debug_IMU_UI(void)
     ips200_show_string(10 ,96 , "Gyro Calib");
     ips200_show_string(10 ,112, "Yaw Reset");
 }
+
+// [三级界面]PAW3395 光定位模块调试界面
+// PAW3395
+void Debug_PAW3395_UI(void)
+{
+    ips200_show_string(8  ,0  , "[DEBUG]-PAW3395");
+    ips200_show_string(0  ,16 , "==============================");
+    ips200_show_string(10 ,32 , "x sum:###");
+    ips200_show_string(10 ,48 , "y sum:###");
+    // 空行
+    ips200_show_string(10 ,80 , "sum reset");
+}
+
 /**********************************************************/
 /*----------------------------------------[E] 界面样式 [E]*/
 /**********************************************************/
@@ -83,10 +96,11 @@ void Debug_IMU_UI(void)
 /**********************************************************/
 
 // 相关函数提前声明
+int Debug_WiFi_SPI      (void);
 int Debug_Motor         (void);
 int Debug_Motor_PID     (void);
 int Debug_IMU           (void);
-int Debug_WiFi          (void);
+int Debug_PAW3395       (void);
 
 // [二级界面]Debug模式界面
 int Debug_Page_Menu(void)
@@ -115,14 +129,14 @@ int Debug_Page_Menu(void)
             key_clear_state(KEY_UP);
             key_pressed = 1;
             Debug_Page_flag --;
-            if (Debug_Page_flag < 1)Debug_Page_flag = 4;
+            if (Debug_Page_flag < 1)Debug_Page_flag = 5;
         }
         else if (KEY_SHORT_PRESS == key_get_state(KEY_DOWN))
         {
             key_clear_state(KEY_DOWN); 
             key_pressed = 1;
             Debug_Page_flag ++;
-            if (Debug_Page_flag > 4)Debug_Page_flag = 1;
+            if (Debug_Page_flag > 5)Debug_Page_flag = 1;
         }
         else if (KEY_SHORT_PRESS == key_get_state(KEY_CONFIRM))
         {
@@ -141,24 +155,34 @@ int Debug_Page_Menu(void)
         if (Debug_Page_flag_temp == 1)
         {
             ips200_clear();
+            Debug_WiFi_SPI();
+            
+            // 从子界面返回后
+            ips200_clear();
+            Debug_Page_Menu_UI();
+            key_pressed = 1;
+        }
+        else if (Debug_Page_flag_temp == 2)
+        {
+            ips200_clear();
             Debug_Motor();
             
             // 从子界面返回后
             ips200_clear();
             Debug_Page_Menu_UI();
-            ips200_show_string(0  ,32 , ">");
+            key_pressed = 1;
         }
-        else if (Debug_Page_flag_temp == 2)
+        else if (Debug_Page_flag_temp == 3)
         {
             ips200_clear();
             Debug_Motor_PID();
-
+            
             // 从子界面返回后
             ips200_clear();
             Debug_Page_Menu_UI();
-            ips200_show_string(0  ,48 , ">");
+            key_pressed = 1;
         }
-        else if (Debug_Page_flag_temp == 3)
+        else if (Debug_Page_flag_temp == 4)
         {
             ips200_clear();
             Debug_IMU();
@@ -166,17 +190,17 @@ int Debug_Page_Menu(void)
             // 从子界面返回后
             ips200_clear();
             Debug_Page_Menu_UI();
-            ips200_show_string(0  ,64 , ">");
+            key_pressed = 1;
         }
-        else if (Debug_Page_flag_temp == 4)
+        else if (Debug_Page_flag_temp == 5)
         {
             ips200_clear();
-            Debug_WiFi();
+            Debug_PAW3395();
 
             // 从子界面返回后
             ips200_clear();
             Debug_Page_Menu_UI();
-            ips200_show_string(0  ,80 , ">");
+            key_pressed = 1;
         }
 
         
@@ -202,6 +226,48 @@ int Debug_Page_Menu(void)
 /**********************************************************/
 /*[S] 调试逻辑 [S]----------------------------------------*/
 /**********************************************************/
+
+//  #   #  #####  #####  #####  
+//  #   #    #    #        #    
+//  # # #    #    #####    #    
+//  ## ##    #    #        #    
+//  #   #  #####  #      #####  
+//
+// [三级界面]WiFi SPI初始化（手动触发 WiFi SPI初始化 + 连接）
+int Debug_WiFi_SPI(void)
+{
+    ips200_show_string(8 ,0  , "[DEBUG]-WIFI-SPI");
+    ips200_show_string(0 ,16 , "==============================");
+    ips200_show_string(10,32 , "Press Confirm to Init");
+
+    if (wifi_spi_inited)
+    {
+        ips200_show_string(10, 96, "Init done!");
+    }
+    
+
+    while(1)
+    {
+        if(KEY_SHORT_PRESS == key_get_state(KEY_CONFIRM))
+        {
+            key_clear_state(KEY_CONFIRM);
+
+            // 触发 WiFi 初始化 + 连 UDP（目标：电脑 192.168.50.247:8086）
+            uint8 r1 = wifi_spi_init("ASC_Circuit_IoT", "1145141919810");
+            uint8 r2 = wifi_spi_socket_connect("UDP", "192.168.50.247", "8086", "6666");
+
+            if(r1 == 0 && r2 == 0) wifi_spi_inited = 1;
+            ips200_show_string(10, 64, r1 ? "Wifi fail" : "Wifi ok");
+            ips200_show_string(10, 80, r2 ? "Sock fail" : "Sock ok");
+            ips200_show_string(10, 96, "Init done!");
+        }
+        else if(KEY_SHORT_PRESS == key_get_state(KEY_BACK))
+        {
+            key_clear_state(KEY_BACK);
+            return 0;
+        }
+    }
+}
 
 //	#   #   ###   #####   ###   ####   
 //  ## ##  #   #    #    #   #  #   #  
@@ -496,9 +562,12 @@ int Debug_Motor_PID (void)
                 {
                     Time_Count2 = 0;
 
-					char buf[64];
-            sprintf(buf, "%d,%d,%d\n", (int16_t)Motor_FL_PID.Actual, (int16_t)Motor_FL_PID.Target, (int16_t)Motor_FL_PID.Out);
-            if(g_wifi_inited) wifi_spi_send_buffer((uint8_t *)buf, (uint32)strlen(buf));
+                    if(wifi_spi_inited) 
+                    {
+                        char buf[64];
+                        sprintf(buf, "%d,%d,%d\n", (int16_t)Motor_FL_PID.Actual, (int16_t)Motor_FL_PID.Target, (int16_t)Motor_FL_PID.Out);
+                        wifi_spi_send_buffer((uint8_t *)buf, (uint32)strlen(buf));
+                    }
                 }
 
 
@@ -529,9 +598,12 @@ int Debug_Motor_PID (void)
         {
             Time_Count2 = 0;
 
-            char buf[64];
-            sprintf(buf, "%d,%d,%d\n", (int16_t)Motor_FL_PID.Actual, (int16_t)Motor_FL_PID.Target, (int16_t)Motor_FL_PID.Out);
-            if(g_wifi_inited) wifi_spi_send_buffer((uint8_t *)buf, (uint32)strlen(buf));
+            if(wifi_spi_inited) 
+            {
+                char buf[64];
+                sprintf(buf, "%d,%d,%d\n", (int16_t)Motor_FL_PID.Actual, (int16_t)Motor_FL_PID.Target, (int16_t)Motor_FL_PID.Out);
+                wifi_spi_send_buffer((uint8_t *)buf, (uint32)strlen(buf));
+            }
         }
         
         
@@ -618,7 +690,7 @@ int Debug_IMU (void)
         }
 
 
-        /* 显示 yaw */
+        /* 显示 yaw + 光流 */
         if (Time_Count1 >= 10)  // 10ms * 10显示周期
         {
             Time_Count1 = 0;
@@ -639,36 +711,84 @@ int Debug_IMU (void)
     }
 }
 
-
-// [三级界面]WiFi 调试（手动触发 WiFi 初始化 + 连接）
-int Debug_WiFi(void)
+//  #####   ###   #   #  #####  #####  #####  #####
+//  #   #  #   #  #   #      #      #  #   #  #
+//  #####  #####  # # #  #####  #####  #####  #####
+//  #      #   #  ## ##      #      #      #      #
+//  #      #   #  #   #  #####  #####  #####  #####
+//
+// [三级界面]PAW3395 光定位模块调试界面
+int Debug_PAW3395(void)
 {
-    ips200_show_string(8 ,0  , "[DEBUG]-WIFI");
-    ips200_show_string(0 ,16 , "==============================");
-    ips200_show_string(10,32 , "Press OK to init");
+    Debug_PAW3395_UI();
+    ips200_show_string(0 ,80 , ">");
+
+    // PAW3395调试界面光标 标志位
+    uint8_t Debug_PAW3395_f = 1;
+
+    // 参考计时值重置
+    Time_Count1 = 0;
+    Time_Count2 = 0;
 
     while(1)
     {
-        if(KEY_SHORT_PRESS == key_get_state(KEY_CONFIRM))
+        // 存储确认键被按下时Debug_PAW3395_f的值的临时变量，默认为无效值0
+        uint8_t Debug_PAW3395_f_temp = 0;
+        // 上/下按键是否被按下过
+        uint8_t key_pressed = 0;
+
+        /* 按键处理 */
+        if (KEY_SHORT_PRESS == key_get_state(KEY_UP))
+        {
+            key_clear_state(KEY_UP);
+            key_pressed = 1;
+            Debug_PAW3395_f--;
+            if(Debug_PAW3395_f < 1){Debug_PAW3395_f = 1;}
+        }
+        else if (KEY_SHORT_PRESS == key_get_state(KEY_DOWN))
+        {
+            key_clear_state(KEY_DOWN);
+            key_pressed = 1;
+            Debug_PAW3395_f++;
+            if(Debug_PAW3395_f > 1){Debug_PAW3395_f = 1;}
+        }
+        else if (KEY_SHORT_PRESS == key_get_state(KEY_CONFIRM))
         {
             key_clear_state(KEY_CONFIRM);
-
-            // 触发 WiFi 初始化 + 连 UDP（目标：电脑 192.168.50.247:8086）
-            uint8 r1 = wifi_spi_init("ASC_Circuit_IoT", "1145141919810");
-            uint8 r2 = wifi_spi_socket_connect("UDP", "192.168.50.247", "8086", "6666");
-            if(r1 == 0 && r2 == 0) g_wifi_inited = 1;
-            ips200_show_string(10, 64, r1 ? "Wifi fail" : "Wifi ok");
-            ips200_show_string(10, 80, r2 ? "Sock fail" : "Sock ok");
+            Debug_PAW3395_f_temp = Debug_PAW3395_f;
         }
-        else if(KEY_SHORT_PRESS == key_get_state(KEY_BACK))
+        else if (KEY_SHORT_PRESS == key_get_state(KEY_BACK))
         {
             key_clear_state(KEY_BACK);
             return 0;
         }
+
+
+        if(Debug_PAW3395_f_temp == 1)
+        {
+            // 发送清零命令给 CM7_1
+            SHARED_FLOW_ADDR->cmd_clear = 1;
+            SHARED_FLOW_WRITE_SYNC();
+        }
+
+        /* 显示更新 */
+        if (Time_Count1 >= 10)  // 10ms * 10 显示周期
+        {
+            Time_Count1 = 0;
+            SHARED_FLOW_READ_SYNC();
+            ips200_printf(58, 32, "%d      ", (int32_t)SHARED_FLOW_ADDR->flow_x_sum);
+            ips200_printf(58, 48, "%d      ", (int32_t)SHARED_FLOW_ADDR->flow_y_sum);
+        }
+
+
+        if (key_pressed)
+        {
+            ips200_show_string(0 ,80 , " ");
+            ips200_show_string(0 ,96 , " ");
+            ips200_show_string(0 ,64 + 16*Debug_PAW3395_f , ">");
+        }
     }
 }
-
-
 /**********************************************************/
 /*----------------------------------------[E] 调试逻辑 [E]*/
 /**********************************************************/
